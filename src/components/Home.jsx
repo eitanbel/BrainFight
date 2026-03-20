@@ -31,10 +31,19 @@ export default function Home() {
   const [difficulte, setDifficulte] = useState('moyen')
   const [nombreQuestions, setNombreQuestions] = useState(10)
   const [mode, setMode] = useState('classique')
+  const [showMoreModes, setShowMoreModes] = useState(false)
   const [joinCode, setJoinCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [loadingMsg, setLoadingMsg] = useState('')
   const [error, setError] = useState('')
+
+  const selectedModeObj = MODES.find(m => m.value === mode)
+  const dropdownModes   = MODES.filter(m => m.value !== mode)
+
+  const handleSelectMode = (value) => {
+    setMode(value)
+    setShowMoreModes(false)
+  }
 
   const needsTheme = mode !== 'qui_est_le_plus'
   const needsDiff  = mode !== 'qui_est_le_plus'
@@ -152,17 +161,47 @@ export default function Home() {
           {/* Mode selector */}
           <label className="home-label">Mode de jeu</label>
           <div className="home-modes">
-            {MODES.map(m => (
-              <button
-                key={m.value}
-                className={`home-mode-card${mode === m.value ? ' home-mode-active' : ''}`}
-                onClick={() => setMode(m.value)}
-              >
-                <span className="home-mode-icon">{m.icon}</span>
-                <span className="home-mode-label">{m.label}</span>
-                <span className="home-mode-desc">{m.desc}</span>
-              </button>
-            ))}
+
+            {/* Carte du mode actif (toujours visible en haut) */}
+            <button
+              className="home-mode-card home-mode-active"
+              onClick={() => setShowMoreModes(v => !v)}
+            >
+              <span className="home-mode-icon">{selectedModeObj.icon}</span>
+              <span className="home-mode-label">{selectedModeObj.label}</span>
+              <span className="home-mode-desc">{selectedModeObj.desc}</span>
+            </button>
+
+            {/* Bouton toggle */}
+            <button
+              className={`home-mode-toggle${showMoreModes ? ' home-mode-toggle-open' : ''}`}
+              onClick={() => setShowMoreModes(v => !v)}
+            >
+              <span>
+                {mode === 'classique' ? 'Autres modes' : `Mode : ${selectedModeObj.label}`}
+              </span>
+              <span className="home-mode-toggle-arrow">
+                {showMoreModes ? '▲' : '▼'}
+              </span>
+            </button>
+
+            {/* Dropdown des autres modes */}
+            {showMoreModes && (
+              <div className="home-mode-dropdown">
+                {dropdownModes.map(m => (
+                  <button
+                    key={m.value}
+                    className="home-mode-card"
+                    onClick={() => handleSelectMode(m.value)}
+                  >
+                    <span className="home-mode-icon">{m.icon}</span>
+                    <span className="home-mode-label">{m.label}</span>
+                    <span className="home-mode-desc">{m.desc}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+
           </div>
 
           {/* Theme (hidden for qui_est_le_plus) */}
