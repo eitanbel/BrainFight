@@ -71,6 +71,20 @@ salons/{code}/
 
 ## Historique des modifications
 
+### 2026-03-20 — Sélecteur de mode rétractable
+**Fonctionnalités :**
+- Home : la section "Mode de jeu" n'affiche plus les 5 cartes en permanence
+- Seule la carte du mode actif est visible en haut (bordure jaune/dorée)
+- Bouton "Autres modes ▼" en dessous (devient "Mode : {nom} ▼" si mode non-Classique)
+- Clic → dropdown animé avec les modes restants + bordure gauche dorée
+- Sélection d'un mode : ferme le dropdown et met à jour la carte active
+- Flèche ▼/▲ qui s'inverse à l'ouverture
+
+**Fichiers impactés :**
+`src/components/Home.jsx`, `src/components/Home.css`
+
+---
+
 ### 2026-03-20 — 4 modes de jeu supplémentaires
 **Fonctionnalités :**
 - Mode Vrai ou Faux : 2 boutons VRAI/FAUX, changement de réponse jusqu'au timer 0
