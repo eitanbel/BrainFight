@@ -33,23 +33,16 @@
 
 .game-timer-bar {
   flex: 1;
-  height: 8px;
+  height: 10px;
   background: #1f1f3a;
-  border-radius: 4px;
+  border-radius: 5px;
   overflow: hidden;
 }
 
 .game-timer-fill {
   height: 100%;
-  border-radius: 4px;
-}
-
-.game-timer-text {
-  font-size: 0.9rem;
-  font-weight: 800;
-  min-width: 26px;
-  text-align: right;
-  white-space: nowrap;
+  border-radius: 5px;
+  transition: background 0.4s ease;
 }
 
 /* Question */

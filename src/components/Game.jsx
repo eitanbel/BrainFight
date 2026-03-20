@@ -14,7 +14,7 @@ export default function Game() {
   const navigate = useNavigate()
 
   const [salon, setSalon] = useState(null)
-  const [timeLeft, setTimeLeft] = useState(QUESTION_TIME)
+  const [timerPercent, setTimerPercent] = useState(100)
   const [hasAnswered, setHasAnswered] = useState(false)
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [phase, setPhase] = useState('playing') // 'playing' | 'reveal'
@@ -44,7 +44,7 @@ export default function Game() {
       setSelectedAnswer(null)
       setPendingCorrect(false)
       setPhase('playing')
-      setTimeLeft(QUESTION_TIME)
+      setTimerPercent(100)
     }
   }, [salon?.questionActuelle])
 
@@ -57,32 +57,35 @@ export default function Game() {
     })
   }
 
-  // Timer
+  // Timer — requestAnimationFrame pour une animation fluide
   useEffect(() => {
     if (!salon?.timerDepart) return
     const timerDepart = salon.timerDepart
     const questionActuelle = salon.questionActuelle
     const totalQuestions = salon.questions?.length ?? 10
-    let flushed = false
+    let triggered = false
+    let rafId
 
-    const interval = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - timerDepart) / 1000)
+    const tick = () => {
+      const elapsed = (Date.now() - timerDepart) / 1000
       const remaining = Math.max(0, QUESTION_TIME - elapsed)
-      setTimeLeft(remaining)
+      const percent = (remaining / QUESTION_TIME) * 100
+      setTimerPercent(percent)
 
-      if (remaining === 0 && !flushed) {
-        flushed = true
-        clearInterval(interval)
+      if (remaining <= 0 && !triggered) {
+        triggered = true
         setPhase('reveal')
-
-        // After reveal pause, advance to next question
         setTimeout(() => {
           advanceQuestion(questionActuelle, totalQuestions)
         }, REVEAL_TIME)
+        return // arrête le RAF
       }
-    }, 200)
 
-    return () => clearInterval(interval)
+      rafId = requestAnimationFrame(tick)
+    }
+
+    rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
   }, [salon?.timerDepart, salon?.questionActuelle])
 
   // Flush pending correct answer when reveal starts
@@ -131,8 +134,7 @@ export default function Game() {
   const qIndex = salon.questionActuelle
   const question = salon.questions[qIndex]
   const total = salon.questions.length
-  const timerPercent = (timeLeft / QUESTION_TIME) * 100
-  const timerColor = timeLeft > 5 ? '#4ade80' : timeLeft > 2 ? '#fbbf24' : '#f87171'
+  const timerColor = timerPercent > 60 ? '#4ade80' : timerPercent > 30 ? '#fbbf24' : '#f87171'
 
   const isReveal = phase === 'reveal'
   const wasCorrect = selectedAnswer === question.reponse
@@ -158,12 +160,9 @@ export default function Game() {
         <div className="game-timer-bar">
           <div
             className="game-timer-fill"
-            style={{ width: `${timerPercent}%`, background: timerColor, transition: 'width 0.2s linear' }}
+            style={{ width: `${timerPercent}%`, background: timerColor }}
           />
         </div>
-        <span className="game-timer-text" style={{ color: timerColor }}>
-          {isReveal ? '✓' : `${timeLeft}s`}
-        </span>
       </div>
 
       {/* Question */}
