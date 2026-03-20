@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { ref, onValue, update, remove } from 'firebase/database'
 import { db } from '../firebase'
-import { generateQuestions } from '../claude'
+import { generateQuestions, generateQuestionsTrueFalse, generateQuestionsEstimation } from '../claude'
 import './Results.css'
 
 export default function Results() {
@@ -47,7 +47,11 @@ export default function Results() {
     setLoading(true)
     setLoadingMsg('Génération de nouvelles questions...')
     try {
-      const questions = await generateQuestions(theme, difficulte, nombre)
+      const gameMode = salon?.mode || 'classique'
+      let questions
+      if (gameMode === 'vrai_ou_faux') questions = await generateQuestionsTrueFalse(theme, difficulte, nombre)
+      else if (gameMode === 'estimation') questions = await generateQuestionsEstimation(theme, difficulte, nombre)
+      else questions = await generateQuestions(theme, difficulte, nombre)
       const updates = {
         questions,
         theme,
@@ -90,17 +94,21 @@ export default function Results() {
   }
 
   const medals = ['🥇', '🥈', '🥉']
+  const gameMode = salon?.mode || 'classique'
+  const isWhoIs = gameMode === 'qui_est_le_plus'
+  const scoreUnit = isWhoIs ? 'vote' : 'pt'
+  const resultsTitle = isWhoIs ? '👥 Le plus désigné de la soirée !' : '🧠 BrainFight — Résultats'
 
   return (
     <div className="results">
-      <h1 className="results-title">🧠 BrainFight — Résultats</h1>
+      <h1 className="results-title">{resultsTitle}</h1>
 
       <div className="results-podium">
         {classement.slice(0, 3).map((j, i) => (
           <div key={j.nom} className={`results-podium-item podium-${i + 1}`}>
             <span className="results-medal">{medals[i]}</span>
             <span className="results-podium-name">{j.nom}</span>
-            <span className="results-podium-score">{j.score} pt{j.score !== 1 ? 's' : ''}</span>
+            <span className="results-podium-score">{j.score} {scoreUnit}{j.score !== 1 ? 's' : ''}</span>
           </div>
         ))}
       </div>
@@ -111,7 +119,7 @@ export default function Results() {
             <div key={j.nom} className={`results-row ${j.nom === pseudo ? 'results-row-me' : ''}`}>
               <span className="results-rank">{i + 4}.</span>
               <span className="results-name">{j.nom}</span>
-              <span className="results-score">{j.score} pt{j.score !== 1 ? 's' : ''}</span>
+              <span className="results-score">{j.score} {scoreUnit}{j.score !== 1 ? 's' : ''}</span>
             </div>
           ))}
         </div>
@@ -121,12 +129,21 @@ export default function Results() {
         <p className="results-loading">⏳ {loadingMsg}</p>
       ) : mode === 'menu' ? (
         <div className="results-actions">
-          <button className="results-btn results-btn-primary" onClick={handleSameTheme}>
-            🔄 Recommencer avec le même thème
-          </button>
-          <button className="results-btn results-btn-secondary" onClick={enterNewThemeMode}>
-            🎨 Changer de thème
-          </button>
+          {!isWhoIs && (
+            <button className="results-btn results-btn-primary" onClick={handleSameTheme}>
+              🔄 Recommencer avec le même thème
+            </button>
+          )}
+          {!isWhoIs && (
+            <button className="results-btn results-btn-secondary" onClick={enterNewThemeMode}>
+              🎨 Changer de thème
+            </button>
+          )}
+          {isWhoIs && (
+            <button className="results-btn results-btn-primary" onClick={handleSameTheme}>
+              🔄 Rejouer avec le même groupe
+            </button>
+          )}
           <button className="results-btn results-btn-ghost" onClick={handleQuit}>
             🚪 Quitter la partie
           </button>

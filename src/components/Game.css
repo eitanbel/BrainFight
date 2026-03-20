@@ -277,3 +277,157 @@
   letter-spacing: 3px;
   padding: 2px 0;
 }
+
+/* ── Contre la montre ── */
+.game-global-timer {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #4ade80;
+  font-variant-numeric: tabular-nums;
+}
+.game-global-timer-urgent {
+  color: #f87171;
+  animation: celebrate-pulse 0.8s ease-in-out infinite;
+}
+
+/* ── Vrai ou Faux ── */
+.game-tf-choices {
+  display: flex;
+  gap: 12px;
+}
+.game-tf-btn {
+  flex: 1;
+  padding: 28px 16px;
+  border-radius: 18px;
+  border: 2px solid #2d2d4e;
+  background: #161627;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 1px;
+}
+.game-tf-btn:hover:not(:disabled) { border-color: #a78bfa; background: #1c1c35; }
+.game-tf-btn.picked { border-color: #a78bfa !important; background: #1e1e3e !important; }
+.game-tf-btn.correct { border-color: #4ade80 !important; background: #0d2a18 !important; color: #4ade80; }
+.game-tf-btn.wrong   { border-color: #f87171 !important; background: #2a0d0d !important; color: #f87171; }
+.game-tf-btn.dimmed  { opacity: 0.35; }
+.game-tf-btn.celebrate { animation: celebrate-pulse 0.6s ease-in-out 2; }
+
+/* ── Estimation ── */
+.game-estimation {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.game-estimation-input {
+  background: #161627;
+  border: 1.5px solid #2d2d4e;
+  border-radius: 14px;
+  padding: 16px 18px;
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  outline: none;
+  text-align: center;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.game-estimation-input:focus { border-color: #a78bfa; }
+.game-estimation-input::placeholder { color: #4b5563; font-weight: 400; font-size: 1rem; }
+.game-estimation-submit {
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #a78bfa, #60a5fa);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.game-estimation-submit:disabled { opacity: 0.45; cursor: default; }
+.game-estimation-submit.validated { background: linear-gradient(135deg, #4ade80, #22d3ee); }
+.game-estimation-reveal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.game-estimation-answer {
+  font-size: 1.05rem;
+  color: #4ade80;
+  font-weight: 700;
+  text-align: center;
+  padding: 12px;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: 12px;
+}
+.game-estimation-mine { font-size: 0.9rem; color: #9ca3af; text-align: center; }
+.game-estimation-pts { font-weight: 700; }
+.game-estimation-pts.pts-3 { color: #4ade80; }
+.game-estimation-pts.pts-2 { color: #86efac; }
+.game-estimation-pts.pts-1 { color: #fbbf24; }
+.game-estimation-pts.pts-0 { color: #f87171; }
+.game-estimation-others { display: flex; flex-direction: column; gap: 6px; }
+.game-estimation-other {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: #6b7280;
+  padding: 6px 12px;
+  background: #161627;
+  border-radius: 8px;
+}
+.game-estimation-ecart { color: #4b5563; font-size: 0.78rem; }
+
+/* ── Qui est le plus ── */
+.game-vote-choices { display: flex; flex-direction: column; gap: 10px; }
+.game-vote-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1.5px solid #2d2d4e;
+  background: #161627;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.game-vote-btn:hover:not(:disabled) { border-color: #f9a8d4; background: #1c1c35; }
+.game-vote-btn.picked { border-color: #f9a8d4 !important; background: rgba(249,168,212,0.1) !important; color: #f9a8d4; }
+.game-vote-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #2d2d4e;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.game-votes-reveal { display: flex; flex-direction: column; gap: 10px; }
+.game-vote-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #161627;
+  border: 1px solid #2d2d4e;
+  border-radius: 12px;
+}
+.game-vote-winner {
+  border-color: #f9a8d4 !important;
+  background: rgba(249,168,212,0.1) !important;
+  animation: celebrate-pulse 0.6s ease-in-out 2;
+}
+.game-vote-result-name { min-width: 80px; font-weight: 600; font-size: 0.9rem; }
+.game-vote-bar-wrap { flex: 1; height: 8px; background: #2d2d4e; border-radius: 4px; overflow: hidden; }
+.game-vote-bar-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, #f9a8d4, #fdba74);
+  transition: width 0.5s ease-out;
+}
+.game-vote-result-count { font-size: 0.8rem; color: #9ca3af; white-space: nowrap; min-width: 52px; text-align: right; }
