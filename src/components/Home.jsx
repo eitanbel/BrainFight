@@ -99,6 +99,23 @@ export default function Home() {
     }
   }
 
+  if (loading) {
+    return (
+      <div className="home-loading-screen">
+        <h1 className="home-loading-title">🧠 BrainFight</h1>
+        <p className="home-loading-msg">
+          Chargement du champ de bataille
+          <span className="home-loading-dots">
+            <span>.</span><span>.</span><span>.</span>
+          </span>
+        </p>
+        <div className="home-loading-bar-wrap">
+          <div className="home-loading-bar" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="home">
       <div className="home-hero">

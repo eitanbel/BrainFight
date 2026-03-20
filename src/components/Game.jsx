@@ -19,6 +19,7 @@ export default function Game() {
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [phase, setPhase] = useState('playing') // 'playing' | 'reveal'
   const [pendingCorrect, setPendingCorrect] = useState(false)
+  const [transitioning, setTransitioning] = useState(false)
 
   const questionIndexRef = useRef(-1)
 
@@ -45,6 +46,7 @@ export default function Game() {
       setPendingCorrect(false)
       setPhase('playing')
       setTimerPercent(100)
+      setTransitioning(false)
     }
   }, [salon?.questionActuelle])
 
@@ -75,6 +77,8 @@ export default function Game() {
       if (remaining <= 0 && !triggered) {
         triggered = true
         setPhase('reveal')
+        // Slide-out 350ms avant le changement de question
+        setTimeout(() => setTransitioning(true), REVEAL_TIME - 350)
         setTimeout(() => {
           advanceQuestion(questionActuelle, totalQuestions)
         }, REVEAL_TIME)
@@ -165,48 +169,71 @@ export default function Game() {
         </div>
       </div>
 
-      {/* Question */}
-      <div className="game-question-card">
-        <p className="game-question">{question.question}</p>
-      </div>
-
-      {/* Choix */}
-      <div className="game-choices">
-        {question.choix.map((choix, i) => (
-          <button
-            key={i}
-            className={getChoiceClass(i)}
-            onClick={() => handleAnswer(i)}
-            disabled={isReveal}
-          >
-            <span className="game-choice-letter">{['A', 'B', 'C', 'D'][i]}</span>
-            <span className="game-choice-text">{choix}</span>
-            {isReveal && i === question.reponse && wasCorrect && (
-              <span className="game-choice-check">✓</span>
-            )}
-          </button>
-        ))}
-      </div>
-
-      {/* Feedback reveal */}
-      {isReveal && (
-        <div className={`game-reveal ${wasCorrect ? 'game-reveal-correct' : hasAnswered ? 'game-reveal-wrong' : 'game-reveal-missed'}`}>
-          {wasCorrect ? '🎉 Bonne réponse !' : hasAnswered ? '❌ Raté !' : '⏰ Temps écoulé !'}
+      {/* Question + Choix + Reveal (animés ensemble) */}
+      <div
+        key={qIndex}
+        className={`game-question-wrap ${transitioning ? 'game-slide-out' : 'game-slide-in'}`}
+      >
+        <div className="game-question-card">
+          <p className="game-question">{question.question}</p>
         </div>
-      )}
 
-      {/* Scores en direct */}
-      <div className="game-scores">
-        <p className="game-scores-title">Scores</p>
-        {Object.entries(salon.joueurs || {})
-          .sort(([, a], [, b]) => b.score - a.score)
-          .map(([nom, data]) => (
-            <div key={nom} className={`game-score-item ${nom === pseudo ? 'game-score-me' : ''}`}>
-              <span>{nom}</span>
-              <span>{data.score ?? 0} pt{data.score !== 1 ? 's' : ''}</span>
-            </div>
+        <div className="game-choices">
+          {question.choix.map((choix, i) => (
+            <button
+              key={i}
+              className={getChoiceClass(i)}
+              onClick={() => handleAnswer(i)}
+              disabled={isReveal}
+            >
+              <span className="game-choice-letter">{['A', 'B', 'C', 'D'][i]}</span>
+              <span className="game-choice-text">{choix}</span>
+              {isReveal && i === question.reponse && wasCorrect && (
+                <span className="game-choice-check">✓</span>
+              )}
+            </button>
           ))}
+        </div>
+
+        {isReveal && (
+          <div className={`game-reveal ${wasCorrect ? 'game-reveal-correct' : hasAnswered ? 'game-reveal-wrong' : 'game-reveal-missed'}`}>
+            {wasCorrect ? '🎉 Bonne réponse !' : hasAnswered ? '❌ Raté !' : '⏰ Temps écoulé !'}
+          </div>
+        )}
       </div>
+
+      {/* Mini-classement */}
+      {(() => {
+        const sorted = Object.entries(salon.joueurs || {})
+          .map(([nom, d]) => ({ nom, score: d.score ?? 0 }))
+          .sort((a, b) => b.score - a.score)
+        const top3 = sorted.slice(0, 3)
+        const meInTop3 = top3.some((j) => j.nom === pseudo)
+        const meEntry = !meInTop3 ? sorted.find((j) => j.nom === pseudo) : null
+        const meRank = !meInTop3 ? sorted.findIndex((j) => j.nom === pseudo) + 1 : null
+        return (
+          <div className="game-scores">
+            <p className="game-scores-title">Classement</p>
+            {top3.map((j, i) => (
+              <div key={j.nom} className={`game-score-item ${j.nom === pseudo ? 'game-score-me' : ''}`}>
+                <span className="game-score-rank">{['🥇', '🥈', '🥉'][i]}</span>
+                <span className="game-score-name">{j.nom}</span>
+                <span className="game-score-pts">{j.score} pt{j.score !== 1 ? 's' : ''}</span>
+              </div>
+            ))}
+            {meEntry && (
+              <>
+                <div className="game-score-separator">···</div>
+                <div className="game-score-item game-score-me">
+                  <span className="game-score-rank">#{meRank}</span>
+                  <span className="game-score-name">{meEntry.nom}</span>
+                  <span className="game-score-pts">{meEntry.score} pt{meEntry.score !== 1 ? 's' : ''}</span>
+                </div>
+              </>
+            )}
+          </div>
+        )
+      })()}
     </div>
   )
 }
