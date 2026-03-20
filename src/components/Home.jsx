@@ -99,7 +99,7 @@ export default function Home() {
     <div className="home">
       <div className="home-hero">
         <h1 className="home-title">🧠 BrainFight</h1>
-        <p className="home-subtitle">Le quiz qui pique</p>
+        <p className="home-subtitle">Et c'est parti pour le quiz !</p>
       </div>
 
       <div className="home-card">
