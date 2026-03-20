@@ -15,8 +15,15 @@ export default function Results() {
   const [salon, setSalon] = useState(null)
   const [mode, setMode] = useState('menu') // 'menu' | 'newTheme'
   const [newTheme, setNewTheme] = useState('')
+  const [newDifficulte, setNewDifficulte] = useState('moyen')
   const [loading, setLoading] = useState(false)
   const [loadingMsg, setLoadingMsg] = useState('')
+
+  const DIFFICULTIES = [
+    { value: 'facile', label: 'Facile' },
+    { value: 'moyen', label: 'Moyen' },
+    { value: 'difficile', label: 'Difficile' },
+  ]
 
   useEffect(() => {
     const unsub = onValue(ref(db, `salons/${code}`), (snap) => {
@@ -36,14 +43,16 @@ export default function Results() {
     return () => unsub()
   }, [code, pseudo, navigate])
 
-  const resetAndRestart = async (theme, difficulte) => {
+  const resetAndRestart = async (theme, difficulte, nombre) => {
     setLoading(true)
     setLoadingMsg('Génération de nouvelles questions...')
     try {
-      const questions = await generateQuestions(theme, difficulte)
+      const questions = await generateQuestions(theme, difficulte, nombre)
       const updates = {
         questions,
         theme,
+        difficulte,
+        nombreQuestions: nombre,
         statut: 'attente',
         questionActuelle: 0,
         timerDepart: null,
@@ -62,12 +71,17 @@ export default function Results() {
 
   const handleSameTheme = () => {
     if (!salon) return
-    resetAndRestart(salon.theme, salon.difficulte || 'moyen')
+    resetAndRestart(salon.theme, salon.difficulte || 'moyen', salon.nombreQuestions || 10)
   }
 
   const handleNewThemeSubmit = () => {
     if (!newTheme.trim()) return
-    resetAndRestart(newTheme.trim(), salon?.difficulte || 'moyen')
+    resetAndRestart(newTheme.trim(), newDifficulte, salon?.nombreQuestions || 10)
+  }
+
+  const enterNewThemeMode = () => {
+    setNewDifficulte(salon?.difficulte || 'moyen')
+    setMode('newTheme')
   }
 
   const handleQuit = async () => {
@@ -110,7 +124,7 @@ export default function Results() {
           <button className="results-btn results-btn-primary" onClick={handleSameTheme}>
             🔄 Recommencer avec le même thème
           </button>
-          <button className="results-btn results-btn-secondary" onClick={() => setMode('newTheme')}>
+          <button className="results-btn results-btn-secondary" onClick={enterNewThemeMode}>
             🎨 Changer de thème
           </button>
           <button className="results-btn results-btn-ghost" onClick={handleQuit}>
@@ -127,6 +141,18 @@ export default function Results() {
             onChange={(e) => setNewTheme(e.target.value)}
             maxLength={50}
           />
+          <p className="results-diff-label">Difficulté</p>
+          <div className="results-difficulty">
+            {DIFFICULTIES.map((d) => (
+              <button
+                key={d.value}
+                className={`results-diff-btn ${newDifficulte === d.value ? 'results-diff-active' : ''}`}
+                onClick={() => setNewDifficulte(d.value)}
+              >
+                {d.label}
+              </button>
+            ))}
+          </div>
           <button className="results-btn results-btn-primary" onClick={handleNewThemeSubmit}>
             ✅ Valider
           </button>

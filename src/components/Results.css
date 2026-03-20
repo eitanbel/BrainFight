@@ -212,3 +212,41 @@
 .results-input::placeholder {
   color: #4b5563;
 }
+
+/* Difficulty selector in new-theme panel */
+.results-diff-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #9ca3af;
+  margin-bottom: -4px;
+}
+
+.results-difficulty {
+  display: flex;
+  gap: 8px;
+}
+
+.results-diff-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 10px;
+  border: 1.5px solid #2d2d4e;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.results-diff-btn:hover {
+  border-color: #a78bfa;
+  color: #fff;
+}
+
+.results-diff-active {
+  background: #a78bfa;
+  border-color: #a78bfa;
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(167, 139, 250, 0.3);
+}

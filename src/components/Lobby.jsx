@@ -60,6 +60,10 @@ export default function Lobby() {
           <p className="lobby-theme-label">Difficulté</p>
           <p className="lobby-difficulty">{salon.difficulte || 'moyen'}</p>
         </div>
+        <div>
+          <p className="lobby-theme-label">Questions</p>
+          <p className="lobby-difficulty">{salon.nombreQuestions || 10}</p>
+        </div>
       </div>
 
       <div className="lobby-card">

@@ -108,17 +108,15 @@ export default function Game() {
   }
 
   const handleAnswer = async (choixIndex) => {
-    if (hasAnswered || phase === 'reveal') return
+    if (phase === 'reveal') return
     setHasAnswered(true)
     setSelectedAnswer(choixIndex)
 
     const question = salon.questions[salon.questionActuelle]
     const isCorrect = choixIndex === question.reponse
 
-    // Store correct locally — score will be flushed at reveal
-    if (isCorrect) {
-      setPendingCorrect(true)
-    }
+    // Always update pendingCorrect based on the latest selection
+    setPendingCorrect(isCorrect)
 
     // Record answer choice in Firebase (but NOT the score yet)
     await update(ref(db, `salons/${code}`), {
@@ -141,10 +139,9 @@ export default function Game() {
 
   const getChoiceClass = (i) => {
     let cls = 'game-choice'
-    // Phase playing: just show selected as "picked"
+    // Phase playing: highlight selected, all others remain active
     if (!isReveal) {
-      if (hasAnswered && i === selectedAnswer) return cls + ' picked'
-      if (hasAnswered) return cls + ' dimmed'
+      if (i === selectedAnswer) return cls + ' picked'
       return cls
     }
     // Phase reveal: show correct/wrong
@@ -181,7 +178,7 @@ export default function Game() {
             key={i}
             className={getChoiceClass(i)}
             onClick={() => handleAnswer(i)}
-            disabled={hasAnswered || isReveal}
+            disabled={isReveal}
           >
             <span className="game-choice-letter">{['A', 'B', 'C', 'D'][i]}</span>
             <span className="game-choice-text">{choix}</span>

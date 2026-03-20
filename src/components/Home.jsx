@@ -16,11 +16,14 @@ const DIFFICULTIES = [
   { value: 'difficile', label: 'Difficile' },
 ]
 
+const QUESTIONS_OPTIONS = [5, 10, 15, 20]
+
 export default function Home() {
   const navigate = useNavigate()
   const [pseudo, setPseudo] = useState('')
   const [theme, setTheme] = useState('')
   const [difficulte, setDifficulte] = useState('moyen')
+  const [nombreQuestions, setNombreQuestions] = useState(10)
   const [joinCode, setJoinCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [loadingMsg, setLoadingMsg] = useState('')
@@ -35,7 +38,7 @@ export default function Home() {
     setLoadingMsg('Génération des questions...')
 
     try {
-      const questions = await generateQuestions(theme.trim(), difficulte)
+      const questions = await generateQuestions(theme.trim(), difficulte, nombreQuestions)
 
       const code = generateCode()
       setLoadingMsg('Création du salon...')
@@ -43,6 +46,7 @@ export default function Home() {
       await set(ref(db, `salons/${code}`), {
         theme: theme.trim(),
         difficulte,
+        nombreQuestions,
         statut: 'attente',
         questions,
         questionActuelle: 0,
@@ -137,6 +141,20 @@ export default function Home() {
                 disabled={loading}
               >
                 {d.label}
+              </button>
+            ))}
+          </div>
+
+          <label className="home-label">Nombre de questions</label>
+          <div className="home-difficulty">
+            {QUESTIONS_OPTIONS.map((n) => (
+              <button
+                key={n}
+                className={`home-diff-btn ${nombreQuestions === n ? 'home-diff-active' : ''}`}
+                onClick={() => setNombreQuestions(n)}
+                disabled={loading}
+              >
+                {n}
               </button>
             ))}
           </div>
