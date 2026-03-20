@@ -20,7 +20,7 @@ const MODES = [
   { value: 'classique',         icon: '🎯', label: 'Classique',         desc: '4 choix, 10 secondes par question' },
   { value: 'vrai_ou_faux',      icon: '✅', label: 'Vrai ou Faux',      desc: 'Rythme rapide, 2 choix seulement' },
   { value: 'estimation',        icon: '🔢', label: 'Estimation',        desc: 'Devinez le bon chiffre, le plus proche gagne' },
-  { value: 'contre_la_montre',  icon: '⚡', label: 'Contre la montre',  desc: 'Max de bonnes réponses en 3 minutes' },
+  { value: 'contre_la_montre',  icon: '⚡', label: 'Contre la montre',  desc: 'Max de bonnes réponses en 1min30' },
   { value: 'qui_est_le_plus',   icon: '👥', label: 'Qui est le +',      desc: 'Votez pour celui du groupe qui correspond le mieux' },
 ]
 
@@ -256,7 +256,7 @@ export default function Home() {
           )}
 
           {mode === 'contre_la_montre' && (
-            <p className="home-mode-info">⚡ Toujours 20 questions · 3 minutes de chrono global</p>
+            <p className="home-mode-info">⚡ Toujours 20 questions · 1min30 de chrono global</p>
           )}
           {mode === 'qui_est_le_plus' && (
             <p className="home-mode-info">👥 Les questions sont générées dans le lobby une fois que tous les joueurs sont connectés</p>

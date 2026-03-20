@@ -12,7 +12,7 @@ const REVEAL_TIME_BY_MODE = {
   classique: 3000, vrai_ou_faux: 3000, estimation: 3000,
   contre_la_montre: 1000, qui_est_le_plus: 4000,
 }
-const GLOBAL_TIMER_CTM = 180 // 3 minutes
+const GLOBAL_TIMER_CTM = 90 // 1 minute 30
 
 export default function Game() {
   const { code } = useParams()
