@@ -32,6 +32,13 @@
   font-weight: 500;
 }
 
+.home-credit {
+  font-size: 0.72rem;
+  color: #6b7280;
+  margin-top: 6px;
+  letter-spacing: 0.3px;
+}
+
 /* Card */
 .home-card {
   width: 100%;

@@ -100,6 +100,7 @@ export default function Home() {
       <div className="home-hero">
         <h1 className="home-title">🧠 BrainFight</h1>
         <p className="home-subtitle">Et c'est parti pour le quiz !</p>
+        <p className="home-credit">Developped by Eitan &amp; powered by Claude</p>
       </div>
 
       <div className="home-card">
