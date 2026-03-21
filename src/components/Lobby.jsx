@@ -22,6 +22,13 @@ export default function Lobby() {
   const [salon, setSalon] = useState(null)
   const [joueurs, setJoueurs] = useState([])
   const [generating, setGenerating] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   useEffect(() => {
     const salonRef = ref(db, `salons/${code}`)
@@ -71,7 +78,14 @@ export default function Lobby() {
     <div className="lobby">
       <div className="lobby-hero">
         <p className="lobby-label">Code de la partie</p>
-        <div className="lobby-code">{code}</div>
+        <div className="lobby-code-boxes">
+          {code.split('').map((letter, i) => (
+            <span key={i} className="lobby-code-box">{letter}</span>
+          ))}
+        </div>
+        <button className="lobby-copy-btn" onClick={handleCopy}>
+          {copied ? '✅ Copié !' : '📋 Copier le code'}
+        </button>
         <p className="lobby-hint">Partage ce code à tes amis !</p>
       </div>
 

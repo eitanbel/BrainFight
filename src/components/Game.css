@@ -2,10 +2,11 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 20px 20px 40px;
+  justify-content: space-between;
+  padding: 20px 20px 24px;
   background: #0d0d1a;
   color: #fff;
-  gap: 16px;
+  gap: 14px;
   max-width: 480px;
   margin: 0 auto;
 }
@@ -29,20 +30,53 @@
   font-weight: 700;
   color: #6b7280;
   white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.game-progress-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 140px;
+}
+
+.game-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2d2d4e;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.game-dot-done {
+  background: #a78bfa;
+}
+
+.game-dot-current {
+  background: #f9a8d4;
+  box-shadow: 0 0 6px rgba(249, 168, 212, 0.6);
+  width: 10px;
+  height: 10px;
 }
 
 .game-timer-bar {
   flex: 1;
-  height: 10px;
+  height: 8px;
   background: #1f1f3a;
   border-radius: 5px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .game-timer-fill {
   height: 100%;
   border-radius: 5px;
   transition: background 0.4s ease;
+}
+
+.game-timer-fill-urgent {
+  box-shadow: 0 0 10px rgba(248, 113, 113, 0.7), 0 0 20px rgba(248, 113, 113, 0.3);
 }
 
 /* Slide animations */
@@ -97,14 +131,14 @@
   background: #161627;
   border: 1.5px solid #2d2d4e;
   border-radius: 14px;
-  padding: 14px 12px;
+  padding: 18px 14px;
   color: #fff;
   cursor: pointer;
   display: flex;
   align-items: flex-start;
   gap: 10px;
   text-align: left;
-  transition: border-color 0.2s, background 0.2s, opacity 0.2s, transform 0.2s;
+  transition: border-color 0.2s, background 0.2s, opacity 0.2s, transform 0.2s, box-shadow 0.2s;
   font-size: 0.9rem;
   line-height: 1.4;
   position: relative;
@@ -113,6 +147,7 @@
 .game-choice:hover:not(:disabled) {
   border-color: #a78bfa;
   background: #1c1c35;
+  box-shadow: 0 0 16px rgba(167, 139, 250, 0.2);
 }
 
 .game-choice:disabled {
@@ -121,8 +156,9 @@
 
 /* Selected but not yet revealed */
 .game-choice.picked {
-  border-color: #a78bfa !important;
-  background: #1e1e3e !important;
+  border-color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Reveal states */
@@ -153,19 +189,33 @@
 }
 
 .game-choice-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f9a8d4, #a78bfa);
+  color: #1a0a10;
   font-weight: 800;
-  color: #a78bfa;
-  min-width: 16px;
+  font-size: 0.82rem;
   flex-shrink: 0;
+  margin-top: 1px;
 }
 
 .game-choice.picked .game-choice-letter {
-  color: #c4b5fd;
+  background: linear-gradient(135deg, #ffffff, #d8b4fe);
+  color: #1a0a10;
 }
 
-.game-choice.correct .game-choice-letter,
+.game-choice.correct .game-choice-letter {
+  background: linear-gradient(135deg, #4ade80, #22d3ee);
+  color: #0a2a18;
+}
+
 .game-choice.wrong .game-choice-letter {
-  color: inherit;
+  background: linear-gradient(135deg, #f87171, #fb923c);
+  color: #2a0a0a;
 }
 
 .game-choice-text {
@@ -219,14 +269,15 @@
 
 /* Mini-classement */
 .game-scores {
-  margin-top: auto;
-  background: #161627;
-  border: 1px solid #2d2d4e;
+  background: rgba(22, 22, 39, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(45, 45, 78, 0.8);
   border-radius: 16px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .game-scores-title {

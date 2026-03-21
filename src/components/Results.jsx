@@ -3,6 +3,7 @@ import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { ref, onValue, update, remove } from 'firebase/database'
 import { db } from '../firebase'
 import { generateQuestions, generateQuestionsTrueFalse, generateQuestionsEstimation } from '../claude'
+import confetti from 'canvas-confetti'
 import './Results.css'
 
 export default function Results() {
@@ -24,6 +25,13 @@ export default function Results() {
     { value: 'moyen', label: 'Moyen' },
     { value: 'difficile', label: 'Difficile' },
   ]
+
+  useEffect(() => {
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.55 }, colors: ['#f9a8d4', '#fdba74', '#a78bfa', '#86efac', '#fde68a'] })
+    setTimeout(() => confetti({ particleCount: 60, spread: 100, origin: { y: 0.4 }, colors: ['#f9a8d4', '#a78bfa', '#60a5fa'] }), 600)
+    setTimeout(() => confetti({ particleCount: 40, spread: 60, origin: { y: 0.5, x: 0.2 }, colors: ['#fdba74', '#fde68a'] }), 1200)
+    setTimeout(() => confetti({ particleCount: 40, spread: 60, origin: { y: 0.5, x: 0.8 }, colors: ['#86efac', '#a78bfa'] }), 1500)
+  }, [])
 
   useEffect(() => {
     const unsub = onValue(ref(db, `salons/${code}`), (snap) => {
@@ -102,16 +110,35 @@ export default function Results() {
   return (
     <div className="results">
       <h1 className="results-title">{resultsTitle}</h1>
+      {salon && !isWhoIs && (
+        <p className="results-subtitle">
+          {salon.theme} · {salon.difficulte || 'moyen'} · {salon.nombreQuestions || 10} questions
+        </p>
+      )}
 
-      <div className="results-podium">
-        {classement.slice(0, 3).map((j, i) => (
-          <div key={j.nom} className={`results-podium-item podium-${i + 1}`}>
-            <span className="results-medal">{medals[i]}</span>
-            <span className="results-podium-name">{j.nom}</span>
-            <span className="results-podium-score">{j.score} {scoreUnit}{j.score !== 1 ? 's' : ''}</span>
+      {/* Gagnant */}
+      {classement.length > 0 && (
+        <div className="results-winner-wrap">
+          <div className="results-podium-item podium-1">
+            <span className="results-medal results-medal-gold">{medals[0]}</span>
+            <span className="results-podium-name">{classement[0].nom}</span>
+            <span className="results-podium-score">{classement[0].score} {scoreUnit}{classement[0].score !== 1 ? 's' : ''}</span>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {/* 2e et 3e */}
+      {classement.length > 1 && (
+        <div className="results-runners">
+          {classement.slice(1, 3).map((j, i) => (
+            <div key={j.nom} className={`results-podium-item podium-${i + 2}`}>
+              <span className="results-medal">{medals[i + 1]}</span>
+              <span className="results-podium-name">{j.nom}</span>
+              <span className="results-podium-score">{j.score} {scoreUnit}{j.score !== 1 ? 's' : ''}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {classement.length > 3 && (
         <div className="results-card">

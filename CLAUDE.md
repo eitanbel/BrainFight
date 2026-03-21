@@ -166,6 +166,25 @@ salons/{code}/
 
 ---
 
+---
+
+### 2026-03-21 — Refonte UI de toutes les pages
+**Fonctionnalités :**
+- Home : padding-top réduit, labels en gris (#9ca3af), bouton "Autres modes" avec ⚡ + bordure pointillés, code sans letter-spacing excessif (placeholder "Ex: AB3X"), glassmorphism sur la carte principale
+- Lobby : code affiché en 4 carrés séparés style clavier, bouton "Copier le code" avec feedback "Copié !", badge mode en dégradé rose/orange (plus grand), avatar joueur + badge "TOI" en dégradé rose/violet
+- Game : layout space-between pour éliminer le vide, boutons de réponse plus grands avec lettre-badge dégradé rose/violet, état sélectionné en bordure blanche, hover avec glow, timer avec glow rouge urgent (8px), compteur en dots animés, classement tous les joueurs avec glassmorphism
+- Results : confettis canvas-confetti au chargement, sous-titre "Thème · Difficulté · N questions", gagnant centré avec animation zoom + 🥇 3rem, 2e/3e en cartes plus petites dessous, bouton "Recommencer" en dégradé rose/orange, "Changer de thème" en bordure violette, "Quitter" en texte gris
+
+**Packages ajoutés :** `canvas-confetti`
+
+**Fichiers impactés :**
+`src/components/Home.jsx`, `src/components/Home.css`,
+`src/components/Lobby.jsx`, `src/components/Lobby.css`,
+`src/components/Game.jsx`, `src/components/Game.css`,
+`src/components/Results.jsx`, `src/components/Results.css`
+
+---
+
 ## Erreurs connues et corrections
 
 *(Ce journal sera mis à jour automatiquement à chaque correction d'erreur.)*

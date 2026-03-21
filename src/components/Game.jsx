@@ -374,10 +374,22 @@ export default function Game() {
             <span className={`game-global-timer${globalTimeLeft < 30 ? ' game-global-timer-urgent' : ''}`}>
               ⏱ {Math.floor(globalTimeLeft / 60)}:{String(globalTimeLeft % 60).padStart(2, '0')}
             </span>
-          ) : `Q${qIndex + 1} / ${total}`}
+          ) : (
+            <span className="game-progress-dots">
+              {Array.from({ length: total }, (_, i) => (
+                <span
+                  key={i}
+                  className={`game-dot ${i < qIndex ? 'game-dot-done' : i === qIndex ? 'game-dot-current' : ''}`}
+                />
+              ))}
+            </span>
+          )}
         </span>
         <div className="game-timer-bar">
-          <div className="game-timer-fill" style={{ width: `${timerPercent}%`, background: timerColor }} />
+          <div
+            className={`game-timer-fill${timerPercent < 30 ? ' game-timer-fill-urgent' : ''}`}
+            style={{ width: `${timerPercent}%`, background: timerColor }}
+          />
         </div>
       </div>
 
@@ -395,30 +407,17 @@ export default function Game() {
         const sorted = Object.entries(salon.joueurs || {})
           .map(([nom, d]) => ({ nom, score: d.score ?? 0 }))
           .sort((a, b) => b.score - a.score)
-        const top3 = sorted.slice(0, 3)
-        const meInTop3 = top3.some(j => j.nom === pseudo)
-        const meEntry = !meInTop3 ? sorted.find(j => j.nom === pseudo) : null
-        const meRank = !meInTop3 ? sorted.findIndex(j => j.nom === pseudo) + 1 : null
+        const rankIcons = ['🥇', '🥈', '🥉']
         return (
           <div className="game-scores">
             <p className="game-scores-title">{scoreTitle}</p>
-            {top3.map((j, i) => (
+            {sorted.map((j, i) => (
               <div key={j.nom} className={`game-score-item ${j.nom === pseudo ? 'game-score-me' : ''}`}>
-                <span className="game-score-rank">{['🥇', '🥈', '🥉'][i]}</span>
+                <span className="game-score-rank">{rankIcons[i] ?? `#${i + 1}`}</span>
                 <span className="game-score-name">{j.nom}</span>
                 <span className="game-score-pts">{j.score} {scoreLabel}{j.score !== 1 ? 's' : ''}</span>
               </div>
             ))}
-            {meEntry && (
-              <>
-                <div className="game-score-separator">···</div>
-                <div className="game-score-item game-score-me">
-                  <span className="game-score-rank">#{meRank}</span>
-                  <span className="game-score-name">{meEntry.nom}</span>
-                  <span className="game-score-pts">{meEntry.score} {scoreLabel}{meEntry.score !== 1 ? 's' : ''}</span>
-                </div>
-              </>
-            )}
           </div>
         )
       })()}

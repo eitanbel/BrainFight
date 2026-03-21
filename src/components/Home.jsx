@@ -177,7 +177,8 @@ export default function Home() {
               className={`home-mode-toggle${showMoreModes ? ' home-mode-toggle-open' : ''}`}
               onClick={() => setShowMoreModes(v => !v)}
             >
-              <span>
+              <span className="home-mode-toggle-icon">⚡</span>
+              <span className="home-mode-toggle-label">
                 {mode === 'classique' ? 'Autres modes' : `Mode : ${selectedModeObj.label}`}
               </span>
               <span className="home-mode-toggle-arrow">
@@ -280,7 +281,7 @@ export default function Home() {
           <input
             className="home-input home-input-code"
             type="text"
-            placeholder="Ex : AB3X"
+            placeholder="Ex: AB3X"
             value={joinCode}
             onChange={e => setJoinCode(e.target.value.toUpperCase())}
             maxLength={4}

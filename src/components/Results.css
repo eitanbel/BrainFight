@@ -19,34 +19,57 @@
   background-clip: text;
 }
 
+.results-subtitle {
+  font-size: 0.82rem;
+  color: #6b7280;
+  text-align: center;
+  margin-top: -10px;
+  text-transform: capitalize;
+  letter-spacing: 0.3px;
+}
+
 /* Podium */
-.results-podium {
+.results-winner-wrap {
+  width: 100%;
+  max-width: 420px;
   display: flex;
-  align-items: flex-end;
   justify-content: center;
+}
+
+.results-runners {
+  display: flex;
   gap: 10px;
   width: 100%;
   max-width: 420px;
-  padding: 12px 0 0;
+}
+
+.results-runners .results-podium-item {
+  flex: 1;
 }
 
 .results-podium-item {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 20px 10px;
+  padding: 20px 14px;
   background: #161627;
   border: 1px solid #2d2d4e;
   border-radius: 20px;
 }
 
 .podium-1 {
+  width: 100%;
+  border-width: 2px;
   border-color: #fbbf24;
-  background: linear-gradient(180deg, #1a1a10 0%, #161627 100%);
-  transform: scale(1.08);
-  box-shadow: 0 0 30px rgba(251, 191, 36, 0.15);
+  background: linear-gradient(180deg, #1c1a0e 0%, #161627 100%);
+  box-shadow: 0 0 40px rgba(251, 191, 36, 0.25), inset 0 1px 0 rgba(251, 191, 36, 0.15);
+  animation: podium-zoom-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes podium-zoom-in {
+  0%   { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .podium-2 {
@@ -61,6 +84,10 @@
   font-size: 2.2rem;
 }
 
+.results-medal-gold {
+  font-size: 3rem;
+}
+
 .results-podium-name {
   font-size: 1rem;
   font-weight: 700;
@@ -70,6 +97,7 @@
 
 .podium-1 .results-podium-name {
   color: #fbbf24;
+  font-size: 1.15rem;
 }
 
 .results-podium-score {
@@ -154,14 +182,14 @@
 }
 
 .results-btn-primary {
-  background: linear-gradient(135deg, #a78bfa, #60a5fa);
-  color: #fff;
-  box-shadow: 0 4px 20px rgba(167, 139, 250, 0.3);
+  background: linear-gradient(135deg, #f9a8d4, #fdba74);
+  color: #1a0a10;
+  box-shadow: 0 4px 20px rgba(249, 168, 212, 0.3);
 }
 
 .results-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgba(167, 139, 250, 0.45);
+  box-shadow: 0 6px 28px rgba(249, 168, 212, 0.5);
 }
 
 .results-btn-secondary {
@@ -178,6 +206,9 @@
   background: transparent;
   color: #6b7280;
   text-align: center;
+  border: none;
+  font-size: 0.92rem;
+  padding: 10px;
 }
 
 .results-btn-ghost:hover {
